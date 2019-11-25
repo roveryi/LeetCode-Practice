@@ -19,43 +19,32 @@ Output: [-1,-1]
 '''
 class Solution:
     def searchRange(self, nums: List[int], target: int) -> List[int]:
+        n = len(nums)
+        if n == 0: return [-1,-1]
+        start, end, mid = 0, n-1, int(n/2)
         
-        # Edge case
-        if len(nums) == 0: return [-1,-1]
-        if len(nums) == 1:
-            return [0,0] if nums[0] == target else [-1,-1]
-        if target < nums[0] or target > nums[-1]: return [-1,-1]
-        
-        start, end, mid = 0, len(nums)-1, int(len(nums)/2)
-        while end - start >= 0:
-            if [target]*(end-start+1) == nums[start:end+1]:
-                return [start, end]
+        while end >= start:
+            if end == start and target == nums[start]: return [start, start]
+            if [target]*(end-start+1) == nums[start:end+1]: return [start, end]
             
-            if target > nums[mid] and start < mid:
-                start = mid
-                mid = int((start + end)/2)
-            elif target > nums[mid] and start == mid:
-                if target == nums[end]: return [end, end]
-                else: return [-1,-1]
-                
-            elif target < nums[mid] and end > mid:
-                end = mid
-                mid = int((start + end)/2)    
-                
-            elif target < nums[mid] and end == mid:
-                if target == nums[start]: return [start, start]
-                else: return [-1,-1]
-                
-            elif target == nums[mid]:   
+            if target > nums[mid]:
+                start = mid+1
+                mid = int((start+end)/2)
+            elif target < nums[mid]:
+                end = mid-1
+                mid = int((start+end)/2)
+            else:
                 if target > nums[start]:
-                    start +=1 
+                    start += 1
                 elif target == nums[start]:
-                    if start > 0 and target == nums[start-1]: 
+                    if start -1 >= 0 and target == nums[start-1]:
                         start -= 1
+                    
                 if target < nums[end]:
                     end -= 1
-                elif target == nums[end]: 
-                    if end < len(nums)-1 and target == nums[end+1]: 
+                elif target == nums[end]:
+                    if end +1 < n-1 and target == nums[end+1]:
                         end += 1
+                
         return [-1,-1]
 
